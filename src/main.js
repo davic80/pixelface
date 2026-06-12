@@ -21,6 +21,9 @@ const state = {
 };
 
 let nextId = 1;
+// Reference size of the active box captured when it is selected. The size slider
+// is centered (100 = this size); right enlarges, left shrinks.
+let sizeRef = null;
 
 // --- DOM refs -------------------------------------------------------------
 const $ = (sel) => document.querySelector(sel);
@@ -78,7 +81,7 @@ function boot() {
   addAreaBtn.addEventListener("click", toggleDrawMode);
 
   // Per-area editor
-  boxSize.addEventListener("input", (e) => resizeActive(Number(e.target.value) / 100));
+  boxSize.addEventListener("input", (e) => resizeActive(Number(e.target.value)));
   boxToggle.addEventListener("click", toggleActiveOn);
   $("#box-delete").addEventListener("click", deleteActive);
 
@@ -132,7 +135,7 @@ async function loadFile(file) {
 }
 
 function makeBox(x, y, w, h) {
-  return { id: nextId++, x, y, w, h, on: true, baseW: w, baseH: h, scale: 1 };
+  return { id: nextId++, x, y, w, h, on: true };
 }
 
 function boxById(id) {
@@ -175,6 +178,10 @@ function drawOverlay() {
 // --- Selection & per-area editing ----------------------------------------
 function selectBox(id) {
   state.activeId = id;
+  const box = boxById(id);
+  // Capture the current size as the slider's neutral (centered) reference.
+  sizeRef = box ? { w: box.w, h: box.h } : null;
+  boxSize.value = "100";
   syncBoxEditor();
   drawOverlay();
 }
@@ -182,19 +189,18 @@ function selectBox(id) {
 function syncBoxEditor() {
   const box = boxById(state.activeId);
   boxEditor.hidden = !box;
-  if (!box) return;
-  boxSize.value = String(Math.round(box.scale * 100));
-  boxToggle.textContent = box.on ? t("editor.exclude") : t("editor.include");
+  if (box) boxToggle.textContent = box.on ? t("editor.exclude") : t("editor.include");
 }
 
-function resizeActive(scale) {
+// pct is the slider value (100 = reference size); scales around the box center.
+function resizeActive(pct) {
   const box = boxById(state.activeId);
-  if (!box) return;
+  if (!box || !sizeRef) return;
+  const f = pct / 100;
   const cx = box.x + box.w / 2;
   const cy = box.y + box.h / 2;
-  box.scale = scale;
-  box.w = Math.max(8, Math.round(box.baseW * scale));
-  box.h = Math.max(8, Math.round(box.baseH * scale));
+  box.w = Math.max(8, Math.round(sizeRef.w * f));
+  box.h = Math.max(8, Math.round(sizeRef.h * f));
   box.x = Math.round(cx - box.w / 2);
   box.y = Math.round(cy - box.h / 2);
   render();
@@ -212,6 +218,7 @@ function toggleActiveOn() {
 function deleteActive() {
   state.boxes = state.boxes.filter((b) => b.id !== state.activeId);
   state.activeId = null;
+  sizeRef = null;
   syncBoxEditor();
   refreshSummary();
   render();
@@ -255,9 +262,8 @@ function onAddTap(e) {
   const y = Math.max(0, Math.min(canvas.height - h, Math.round(p.y - h / 2)));
   const box = makeBox(x, y, w, h);
   state.boxes.push(box);
-  state.activeId = box.id;
   toggleDrawMode(); // leave add mode after placing one area
-  syncBoxEditor();
+  selectBox(box.id);
   refreshSummary();
   render();
 }
@@ -322,6 +328,7 @@ function reset() {
   state.image = null;
   state.boxes = [];
   state.activeId = null;
+  sizeRef = null;
   state.drawMode = false;
   overlay.classList.remove("drawing");
   addAreaBtn.classList.remove("active");

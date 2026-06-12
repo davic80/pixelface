@@ -52,26 +52,18 @@ function pixelate(ctx, b, intensity) {
 }
 
 function blur(ctx, b, intensity) {
-  const radius = Math.max(2, Math.round((intensity / 100) * (b.w / 4)));
-  ctx.save();
-  ctx.beginPath();
-  ctx.rect(b.x, b.y, b.w, b.h);
-  ctx.clip();
-  ctx.filter = `blur(${radius}px)`;
-  // Redraw the region (slightly enlarged) so the blur fills to the edges.
-  const o = radius;
-  ctx.drawImage(
-    ctx.canvas,
-    b.x - o,
-    b.y - o,
-    b.w + o * 2,
-    b.h + o * 2,
-    b.x - o,
-    b.y - o,
-    b.w + o * 2,
-    b.h + o * 2,
-  );
-  ctx.restore();
+  // Approximate blur by downscaling the region and upscaling it with smoothing
+  // ON. This avoids CanvasRenderingContext2D.filter, which iOS Safari does not
+  // handle reliably (blur did nothing on iPhone).
+  const dim = Math.max(2, Math.round(b.w * (0.04 + (1 - intensity / 100) * 0.22)));
+  const tmp = document.createElement("canvas");
+  const tctx = tmp.getContext("2d");
+  tmp.width = dim;
+  tmp.height = Math.max(2, Math.round((dim * b.h) / b.w));
+  tctx.imageSmoothingEnabled = true;
+  tctx.drawImage(ctx.canvas, b.x, b.y, b.w, b.h, 0, 0, tmp.width, tmp.height);
+  ctx.imageSmoothingEnabled = true;
+  ctx.drawImage(tmp, 0, 0, tmp.width, tmp.height, b.x, b.y, b.w, b.h);
 }
 
 function emoji(ctx, b, glyph) {

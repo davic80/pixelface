@@ -3,6 +3,16 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.4] - 2026-06-12
+
+### Fixed
+- **Blur now works on iOS/iPhone**: replaced the canvas `filter`-based blur (which
+  iOS Safari ignores) with a downscale + smooth-upscale blur that works everywhere.
+
+### Changed
+- The per-area **size slider is now centered**: the middle is the current size,
+  drag right to enlarge and left to shrink (relative to the size when selected).
+
 ## [0.2.3] - 2026-06-12
 
 ### Changed
