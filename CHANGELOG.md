@@ -15,6 +15,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/).
 - Deploy tooling: `deploy.sh` (pulls the GHCR image and runs it bound to
   127.0.0.1), `.env.example`, and `DEPLOY.md` with Cloudflare DNS + reverse
   proxy (Caddy / nginx) instructions.
+- `docker-compose.yml` (full stack: app + own Caddy with automatic TLS) and
+  `docker-compose.shared.yml` (app only, joins an existing Caddy's Docker
+  network — e.g. sharing the padelscores Caddy as a single edge).
 
 ### Planned (future patch)
 - Per-face effect/emoji (different censor style per detected face).

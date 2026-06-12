@@ -1,0 +1,26 @@
+# pixelface — app ONLY, behind your EXISTING Caddy (the one already serving
+# padelscores). No second Caddy here: your current Caddy becomes the shared edge
+# and reverse-proxies to this container by name over a shared Docker network.
+#
+# Steps:
+#   1) Find the Docker network your Caddy is on:
+#        docker inspect <caddy-container> \
+#          --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}} {{end}}'
+#   2) Put that network name in .env as PROXY_NETWORK
+#   3) docker compose -f docker-compose.shared.yml up -d
+#   4) Add the pixelface site block to your Caddyfile and reload Caddy (see DEPLOY.md §3-B).
+
+services:
+  pixelface:
+    image: ghcr.io/davic80/pixelface:${PIXELFACE_TAG:-latest}
+    container_name: pixelface
+    restart: unless-stopped
+    expose:
+      - "80" # internal only; reached by the shared Caddy as http://pixelface:80
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
+    name: ${PROXY_NETWORK:?set PROXY_NETWORK in .env to your existing Caddy network}

@@ -1,0 +1,43 @@
+# pixelface — full stack: the static app + Caddy reverse proxy with automatic TLS.
+#
+#   cp .env.example .env      # set PIXELFACE_HOST (and PIXELFACE_TAG if pinning)
+#   docker compose up -d      # pulls the GHCR image and starts everything
+#
+# Caddy obtains/renews the Let's Encrypt certificate for ${PIXELFACE_HOST}.
+# Requirements: ports 80 and 443 free on the host, DNS A record already pointing
+# here, and Cloudflare in "DNS only" (grey cloud).
+
+services:
+  pixelface:
+    image: ghcr.io/davic80/pixelface:${PIXELFACE_TAG:-latest}
+    container_name: pixelface
+    restart: unless-stopped
+    expose:
+      - "80" # internal only; reachable by Caddy on the shared network
+    networks:
+      - web
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: pixelface-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      PIXELFACE_HOST: ${PIXELFACE_HOST:-pixelface.ojoalprecio.com}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data # persists TLS certificates
+      - caddy_config:/config
+    networks:
+      - web
+    depends_on:
+      - pixelface
+
+networks:
+  web:
+
+volumes:
+  caddy_data:
+  caddy_config:

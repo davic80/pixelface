@@ -1,0 +1,5 @@
+# Reverse proxy for pixelface. The hostname comes from PIXELFACE_HOST in .env.
+# Caddy obtains and renews the TLS certificate automatically (Let's Encrypt).
+{$PIXELFACE_HOST} {
+	reverse_proxy pixelface:80
+}
