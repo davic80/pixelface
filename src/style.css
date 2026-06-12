@@ -189,6 +189,33 @@ body {
   border-color: rgba(255, 255, 255, 0.4);
 }
 
+.facebox.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent), 0 0 0 4px rgba(91, 140, 255, 0.25);
+}
+
+/* While adding an area, the overlay itself captures the drag. */
+.overlay.drawing {
+  pointer-events: auto;
+  cursor: crosshair;
+}
+
+.overlay.drawing .facebox {
+  pointer-events: none;
+}
+
+.rubberband {
+  position: absolute;
+  border: 2px dashed var(--accent);
+  background: rgba(91, 140, 255, 0.15);
+  pointer-events: none;
+}
+
+#add-area.active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 .status {
   position: absolute;
   left: 50%;

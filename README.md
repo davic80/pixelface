@@ -9,8 +9,12 @@ en tu navegador: la imagen **nunca se sube a ningún servidor**.
 
 1. Subes (o arrastras) una foto.
 2. Se detectan las caras automáticamente, en tu dispositivo.
-3. Eliges qué caras tapar y con qué estilo: **pixelado**, **desenfoque** o **emoji**.
-4. Descargas la imagen — sin metadatos EXIF.
+3. Ajustas las áreas a tapar:
+   - Tocas un recuadro para **seleccionarlo** y cambiar su **tamaño** (slider),
+     incluirlo/excluirlo o borrarlo.
+   - Dibujas áreas nuevas a mano con **+ Área** (por si una cara pequeña no se detecta).
+4. Eliges el estilo: **pixelado**, **desenfoque** o **emoji**.
+5. Descargas la imagen — sin metadatos EXIF.
 
 La detección usa [MediaPipe Tasks Vision](https://ai.google.dev/edge/mediapipe)
 (BlazeFace) compilado a WASM y ejecutado en el cliente. El modelo y el runtime WASM se

@@ -1,50 +1,39 @@
 #!/usr/bin/env bash
 #
-# pixelface — deploy on the server.
+# pixelface — deploy / update on the server.
 #
-# Pulls the prebuilt image published by CI to GHCR and (re)starts the container.
-# The container listens ONLY on 127.0.0.1 so your reverse proxy is the only thing
-# facing the internet (it terminates TLS for ${PIXELFACE_HOST} -> here).
+# Pulls the latest image published by CI to GHCR and (re)starts the stack with
+# docker compose. Defaults to docker-compose.shared.yml (the app behind the
+# existing shared Caddy, e.g. the padelscores one). Override the compose file
+# with PIXELFACE_COMPOSE=docker-compose.yml for the self-contained stack.
 #
-# Config comes from a local .env file (copy .env.example -> .env). Any value can
-# also be overridden inline, e.g.:  PIXELFACE_TAG=<sha> ./deploy.sh
+# Usage:  ./deploy.sh
 #
-# Requirements on the server: Docker, and either a public GHCR package or a prior
-# `docker login ghcr.io` if the package is private.
+# Requirements: Docker + docker compose, and a public GHCR package (or a prior
+# `docker login ghcr.io`).
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "${SCRIPT_DIR}"
 
-# Load .env if present (does not override values already set in the environment).
-if [ -f "${SCRIPT_DIR}/.env" ]; then
+if [ -f .env ]; then
   set -a
   # shellcheck disable=SC1091
-  . "${SCRIPT_DIR}/.env"
+  . ./.env
   set +a
 fi
 
-PIXELFACE_IMAGE="${PIXELFACE_IMAGE:-ghcr.io/davic80/pixelface}"
-PIXELFACE_TAG="${PIXELFACE_TAG:-latest}"
-PIXELFACE_PORT="${PIXELFACE_PORT:-8080}"
-PIXELFACE_HOST="${PIXELFACE_HOST:-pixelface.ojoalprecio.com}"
-NAME="pixelface"
-IMAGE="${PIXELFACE_IMAGE}:${PIXELFACE_TAG}"
+COMPOSE_FILE="${PIXELFACE_COMPOSE:-docker-compose.shared.yml}"
 
-echo "==> Pulling ${IMAGE}"
-docker pull "${IMAGE}"
+echo "==> Updating repo (compose files, Caddyfile, scripts)"
+git pull --ff-only || echo "   (git pull skipped/failed; continuing with local files)"
 
-echo "==> (Re)starting container '${NAME}' on 127.0.0.1:${PIXELFACE_PORT}"
-docker rm -f "${NAME}" 2>/dev/null || true
-docker run -d \
-  --name "${NAME}" \
-  --restart unless-stopped \
-  -p "127.0.0.1:${PIXELFACE_PORT}:80" \
-  "${IMAGE}"
+echo "==> Pulling latest image"
+docker compose -f "${COMPOSE_FILE}" pull
 
-echo "==> Pruning dangling images"
+echo "==> Restarting stack"
+docker compose -f "${COMPOSE_FILE}" up -d
+
 docker image prune -f >/dev/null || true
-
-echo "==> Done."
-echo "    pixelface is running on http://127.0.0.1:${PIXELFACE_PORT}"
-echo "    Reverse proxy: ${PIXELFACE_HOST} -> 127.0.0.1:${PIXELFACE_PORT}"
+echo "==> Done (${COMPOSE_FILE}). https://${PIXELFACE_HOST:-pixelface.ojoalprecio.com}"

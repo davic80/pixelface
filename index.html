@@ -50,9 +50,9 @@
 
         <aside class="controls">
           <div class="control-group">
-            <h2 data-i18n="controls.faces">Caras detectadas</h2>
+            <h2 data-i18n="controls.faces">Caras</h2>
             <p id="faces-summary" class="muted" data-i18n="controls.facesHint">
-              Toca un recuadro para incluir o excluir una cara.
+              Toca para seleccionar
             </p>
             <div class="row">
               <button type="button" id="select-all" class="btn-ghost" data-i18n="controls.selectAll">
@@ -60,6 +60,26 @@
               </button>
               <button type="button" id="select-none" class="btn-ghost" data-i18n="controls.selectNone">
                 Ninguna
+              </button>
+              <button type="button" id="add-area" class="btn-ghost" data-i18n="controls.addArea">
+                + Área
+              </button>
+            </div>
+          </div>
+
+          <!-- Per-area editor: shown when an area is selected -->
+          <div class="control-group" id="box-editor" hidden>
+            <h2 data-i18n="editor.title">Área seleccionada</h2>
+            <label class="slider-label">
+              <span data-i18n="editor.size">Tamaño</span>
+              <input type="range" id="box-size" min="40" max="260" value="100" />
+            </label>
+            <div class="row">
+              <button type="button" id="box-toggle" class="btn-ghost" data-i18n="editor.exclude">
+                No censurar
+              </button>
+              <button type="button" id="box-delete" class="btn-ghost" data-i18n="editor.delete">
+                Borrar
               </button>
             </div>
           </div>

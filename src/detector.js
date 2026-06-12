@@ -20,9 +20,9 @@ function createDetector() {
         modelAssetPath: "/models/blaze_face_short_range.tflite",
       },
       runningMode: "IMAGE",
-      // Lower threshold: tiling + NMS lets us be permissive without piling up
-      // duplicates, which helps with small / partially-occluded faces.
-      minDetectionConfidence: 0.3,
+      // Conservative: prefer missing a small face (the user can add an area by
+      // hand) over false positives. Tiling still recovers many small faces.
+      minDetectionConfidence: 0.5,
     });
   })();
 }

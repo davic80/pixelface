@@ -3,6 +3,21 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.0] - 2026-06-12
+
+### Added
+- **Manual areas**: draw your own censor area with **+ Área** (drag on the photo).
+- **Per-area editing**: tap an area to select it, then resize it with a **slider**,
+  toggle whether it is censored, or delete it.
+- GitHub Release per version: a release workflow on `v*` tags publishes the release
+  (notes from this changelog) and tags the GHCR image with the version.
+
+### Changed
+- Detection is more conservative (confidence 0.5) to avoid false positives; missed
+  small faces can now be added by hand.
+- `deploy.sh` now updates the running stack via docker compose (git pull + compose
+  pull + up), matching the shared-Caddy production setup.
+
 ## [0.1.2] - 2026-06-12
 
 ### Improved

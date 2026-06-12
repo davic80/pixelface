@@ -3,7 +3,7 @@
 > Webapp para pixelar/censurar caras en fotos. **Procesamiento 100% en el navegador**:
 > la foto nunca se sube a ningún servidor. Privacidad total por diseño.
 
-Estado: **borrador de spec** · Última actualización: 2026-06-12
+Estado: **en producción** (v0.2.0) en https://pixelface.ojoalprecio.com · Última actualización: 2026-06-12
 
 ---
 
@@ -97,13 +97,15 @@ que la imagen **nunca llega al servidor**. No es "no la guardamos", es "nunca la
   a decidir).
 - Disclosure de afiliados de Amazon.
 
-## 9. Fuera de alcance en v1 (backlog)
+## 9. Backlog
 
-- Edición manual de recuadros (añadir cara no detectada / borrar falso positivo) → **v2**.
+- ✅ ~~Edición manual de recuadros (añadir área / borrar / redimensionar)~~ → hecho en **v0.2.0**.
+- **Estilo de censura distinto por cara** (siguiente).
+- Mover/arrastrar un área ya creada (ahora se redimensiona desde el centro, pero no se reposiciona).
 - Detección de matrículas u otros objetos sensibles.
-- **Estilo de censura distinto por cara** (próxima patch tras v0.1.2).
 - Modo lote (varias fotos a la vez).
 - Rotar el emoji según la orientación de la cara (usar keypoints de MediaPipe).
+- Bloque de publicidad (referidos Amazon/ojoalprecio) en el slot `#ads`.
 
 ## 10. Decisiones tomadas
 
