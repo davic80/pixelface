@@ -1,0 +1,10 @@
+node_modules/
+dist/
+
+# Self-hosted runtime assets fetched by scripts/fetch-assets.js
+public/wasm/
+public/models/
+
+# OS / editor
+.DS_Store
+*.log

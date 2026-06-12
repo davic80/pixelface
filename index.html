@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Pixela y censura caras en tus fotos. 100% privado: todo se procesa en tu navegador, la imagen nunca se sube a ningún servidor."
+    />
+    <title>pixelface · pixela caras, 100% privado</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/">
+        <span class="brand-dot"></span> pixelface
+      </a>
+      <nav class="lang-switch" aria-label="Idioma">
+        <button type="button" data-lang="es">ES</button>
+        <button type="button" data-lang="en">EN</button>
+      </nav>
+    </header>
+
+    <main class="app">
+      <section class="hero">
+        <h1 data-i18n="hero.title">Pixela las caras de tus fotos</h1>
+        <p class="hero-sub" data-i18n="hero.subtitle">
+          Sube una foto, elige qué caras tapar y descárgala.
+        </p>
+        <p class="privacy-badge">
+          <span class="lock">🔒</span>
+          <span data-i18n="hero.privacy">
+            100% privado. Todo se procesa en tu dispositivo. La foto nunca se sube.
+          </span>
+        </p>
+      </section>
+
+      <!-- Drop / upload zone -->
+      <section id="dropzone" class="dropzone">
+        <input id="file-input" type="file" accept="image/*" hidden />
+        <div class="dropzone-inner">
+          <div class="dropzone-icon">🖼️</div>
+          <p data-i18n="upload.cta"><strong>Arrastra una foto</strong> o haz clic para elegir</p>
+          <p class="dropzone-hint" data-i18n="upload.hint">
+            La imagen no sale de tu navegador.
+          </p>
+        </div>
+      </section>
+
+      <!-- Editor (hidden until an image is loaded) -->
+      <section id="editor" class="editor" hidden>
+        <div class="canvas-wrap">
+          <canvas id="canvas"></canvas>
+          <div id="overlay" class="overlay"></div>
+          <div id="status" class="status" aria-live="polite"></div>
+        </div>
+
+        <aside class="controls">
+          <div class="control-group">
+            <h2 data-i18n="controls.faces">Caras detectadas</h2>
+            <p id="faces-summary" class="muted" data-i18n="controls.facesHint">
+              Toca un recuadro para incluir o excluir una cara.
+            </p>
+            <div class="row">
+              <button type="button" id="select-all" class="btn-ghost" data-i18n="controls.selectAll">
+                Todas
+              </button>
+              <button type="button" id="select-none" class="btn-ghost" data-i18n="controls.selectNone">
+                Ninguna
+              </button>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <h2 data-i18n="controls.style">Estilo</h2>
+            <div class="seg" id="style-seg">
+              <button type="button" data-style="pixelate" class="active" data-i18n="style.pixelate">Pixelado</button>
+              <button type="button" data-style="blur" data-i18n="style.blur">Desenfoque</button>
+              <button type="button" data-style="emoji" data-i18n="style.emoji">Emoji</button>
+            </div>
+
+            <label class="slider-label" id="intensity-label">
+              <span data-i18n="controls.intensity">Intensidad</span>
+              <input type="range" id="intensity" min="1" max="100" value="50" />
+            </label>
+
+            <div class="emoji-picker" id="emoji-picker" hidden>
+              <button type="button" class="active">😀</button>
+              <button type="button">😎</button>
+              <button type="button">🙈</button>
+              <button type="button">⬛</button>
+              <button type="button">❓</button>
+            </div>
+          </div>
+
+          <div class="control-group actions">
+            <button type="button" id="download" class="btn-primary" data-i18n="controls.download">
+              Descargar
+            </button>
+            <button type="button" id="reset" class="btn-ghost" data-i18n="controls.reset">
+              Otra foto
+            </button>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <!-- Ad / referrals slot (filled in later) -->
+    <section id="ads" class="ads" aria-label="Recomendaciones" hidden></section>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <p class="footer-privacy" data-i18n="footer.privacy">
+          🔒 Tus fotos nunca salen de tu dispositivo.
+        </p>
+        <a
+          class="coffee"
+          href="https://www.paypal.com/donate/?hosted_button_id=7Z6JDTBCDCWHC"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-i18n="footer.coffee"
+        >
+          ☕ Invítame a un café
+        </a>
+        <span class="version" id="version"></span>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
