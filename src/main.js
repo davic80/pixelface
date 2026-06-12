@@ -92,8 +92,8 @@ function boot() {
   $("#download").addEventListener("click", download);
   $("#reset").addEventListener("click", reset);
 
-  // Drawing new areas on the overlay.
-  overlay.addEventListener("pointerdown", onDrawStart);
+  // Adding new areas: tap on the overlay while in add mode.
+  overlay.addEventListener("pointerdown", onAddTap);
 
   // Warm up the detector in the background so the first photo feels instant.
   getDetector().catch(() => {});
@@ -233,64 +233,33 @@ function toImageCoords(e) {
   };
 }
 
-function onDrawStart(e) {
+// Size for a manually-added area: the average of the existing boxes, or a
+// standard size (~15% of the shorter image side) when there are none.
+function newAreaSize() {
+  if (state.boxes.length) {
+    const w = state.boxes.reduce((s, b) => s + b.w, 0) / state.boxes.length;
+    const h = state.boxes.reduce((s, b) => s + b.h, 0) / state.boxes.length;
+    return { w: Math.round(w), h: Math.round(h) };
+  }
+  const s = Math.round(Math.min(canvas.width, canvas.height) * 0.15);
+  return { w: s, h: s };
+}
+
+// In add mode, a single tap drops a new area centered on the tap point.
+function onAddTap(e) {
   if (!state.drawMode) return;
-  // Prevent the touch gesture from scrolling/zooming the page while drawing.
   e.preventDefault();
-  const start = toImageCoords(e);
-  const band = document.createElement("div");
-  band.className = "rubberband";
-  overlay.appendChild(band);
-
-  const onMove = (ev) => {
-    ev.preventDefault();
-    const p = toImageCoords(ev);
-    const x = Math.min(start.x, p.x);
-    const y = Math.min(start.y, p.y);
-    const w = Math.abs(p.x - start.x);
-    const h = Math.abs(p.y - start.y);
-    band.style.left = `${(x / canvas.width) * 100}%`;
-    band.style.top = `${(y / canvas.height) * 100}%`;
-    band.style.width = `${(w / canvas.width) * 100}%`;
-    band.style.height = `${(h / canvas.height) * 100}%`;
-  };
-
-  const cleanup = () => {
-    window.removeEventListener("pointermove", onMove);
-    window.removeEventListener("pointerup", onUp);
-    window.removeEventListener("pointercancel", onCancel);
-    band.remove();
-  };
-
-  const onUp = (ev) => {
-    cleanup();
-    const p = toImageCoords(ev);
-    const x = Math.round(Math.min(start.x, p.x));
-    const y = Math.round(Math.min(start.y, p.y));
-    const w = Math.round(Math.abs(p.x - start.x));
-    const h = Math.round(Math.abs(p.y - start.y));
-    toggleDrawMode(); // leave draw mode after one area
-    if (w >= 8 && h >= 8) {
-      const box = makeBox(x, y, w, h);
-      state.boxes.push(box);
-      state.activeId = box.id;
-      syncBoxEditor();
-      refreshSummary();
-    }
-    render();
-  };
-
-  const onCancel = () => {
-    cleanup();
-    toggleDrawMode();
-    render();
-  };
-
-  // Listen on window so the drag keeps tracking even if the pointer leaves the
-  // overlay (important on touch screens).
-  window.addEventListener("pointermove", onMove, { passive: false });
-  window.addEventListener("pointerup", onUp);
-  window.addEventListener("pointercancel", onCancel);
+  const p = toImageCoords(e);
+  const { w, h } = newAreaSize();
+  const x = Math.max(0, Math.min(canvas.width - w, Math.round(p.x - w / 2)));
+  const y = Math.max(0, Math.min(canvas.height - h, Math.round(p.y - h / 2)));
+  const box = makeBox(x, y, w, h);
+  state.boxes.push(box);
+  state.activeId = box.id;
+  toggleDrawMode(); // leave add mode after placing one area
+  syncBoxEditor();
+  refreshSummary();
+  render();
 }
 
 // --- Bulk + style controls ------------------------------------------------

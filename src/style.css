@@ -207,13 +207,6 @@ body {
   pointer-events: none;
 }
 
-.rubberband {
-  position: absolute;
-  border: 2px dashed var(--accent);
-  background: rgba(91, 140, 255, 0.15);
-  pointer-events: none;
-}
-
 #add-area.active {
   border-color: var(--accent);
   color: var(--accent);
@@ -317,16 +310,13 @@ body {
   border-color: var(--accent);
 }
 
-/* Full-width action bar spanning both editor columns (photo + options). */
+/* Action bar aligned to the editor columns: Download under the photo,
+   New photo under the options. */
 .editor-actions {
   grid-column: 1 / -1;
-  display: flex;
-  gap: 12px;
-}
-
-.editor-actions .btn-primary,
-.editor-actions .btn-ghost {
-  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 16px;
 }
 
 .btn-primary {
@@ -404,6 +394,11 @@ body {
   }
 
   .editor {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .editor-actions {
     grid-template-columns: 1fr;
     gap: 12px;
   }

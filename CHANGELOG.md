@@ -3,6 +3,15 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.3] - 2026-06-12
+
+### Changed
+- Adding an area is now **tap to place**: press **+ Área**, then tap the photo and
+  a box appears centered there, sized to the average of the detected faces (or a
+  standard size when none were detected). Resize it afterwards with the slider.
+- Action bar aligned to the columns: **Download** spans the photo width, **New
+  photo** spans the options width.
+
 ## [0.2.2] - 2026-06-12
 
 ### Changed
