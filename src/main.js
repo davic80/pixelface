@@ -1,5 +1,5 @@
 import "./style.css";
-import { trackCoffee, trackVisit } from "./analytics.js";
+import { trackCoffee, trackEvent, trackVisit } from "./analytics.js";
 import { renderCensored } from "./censor.js";
 import { detectFaces, getDetector } from "./detector.js";
 import { applyTranslations, detectLang, setLang, t } from "./i18n.js";
@@ -89,6 +89,7 @@ function boot() {
 
   // Per-area editor
   boxSize.addEventListener("input", (e) => resizeActive(Number(e.target.value)));
+  boxSize.addEventListener("change", () => trackEvent("resize"));
   boxToggle.addEventListener("click", toggleActiveOn);
   $("#box-delete").addEventListener("click", deleteActive);
 
@@ -99,6 +100,7 @@ function boot() {
     styleTarget().intensity = Number(e.target.value);
     render();
   });
+  intensityEl.addEventListener("change", () => trackEvent("intensity"));
   $("#download").addEventListener("click", download);
   $("#reset").addEventListener("click", reset);
 
@@ -301,6 +303,7 @@ function toggleActiveOn() {
   syncBoxEditor();
   refreshSummary();
   render();
+  trackEvent("toggle");
 }
 
 function deleteActive() {
@@ -311,6 +314,7 @@ function deleteActive() {
   syncStyleControls();
   refreshSummary();
   render();
+  trackEvent("delete_area");
 }
 
 // --- Drawing a new area ---------------------------------------------------
@@ -355,6 +359,7 @@ function onAddTap(e) {
   selectBox(box.id);
   refreshSummary();
   render();
+  trackEvent("add_area");
 }
 
 // --- Bulk + style controls ------------------------------------------------
@@ -363,6 +368,7 @@ function setAll(on) {
   syncBoxEditor();
   refreshSummary();
   render();
+  trackEvent(on ? "select_all" : "select_none");
 }
 
 function applyStyle(style) {
@@ -376,16 +382,20 @@ function applyStyle(style) {
 
 function onStyleClick(e) {
   const btn = e.target.closest("[data-style]");
-  if (btn) applyStyle(btn.dataset.style);
+  if (!btn) return;
+  applyStyle(btn.dataset.style);
+  trackEvent("style", btn.dataset.style);
 }
 
 function onEmojiClick(e) {
   const btn = e.target.closest("button");
   if (!btn) return;
-  styleTarget().emoji = btn.textContent.trim();
+  const glyph = btn.textContent.trim();
+  styleTarget().emoji = glyph;
   for (const b of e.currentTarget.children) b.classList.toggle("active", b === btn);
   // Picking an emoji implies you want the emoji style.
   applyStyle("emoji");
+  trackEvent("emoji", glyph);
 }
 
 function refreshSummary() {
@@ -401,6 +411,7 @@ function setStatus(msg) {
 
 // --- Output ---------------------------------------------------------------
 function download() {
+  trackEvent("download");
   // toBlob re-encodes from canvas pixels only -> no EXIF metadata carried over.
   canvas.toBlob((blob) => {
     if (!blob) return;
@@ -414,6 +425,7 @@ function download() {
 }
 
 function reset() {
+  trackEvent("new_photo");
   state.image = null;
   state.boxes = [];
   state.activeId = null;

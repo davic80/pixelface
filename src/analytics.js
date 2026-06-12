@@ -30,3 +30,8 @@ export function trackVisit() {
 export function trackCoffee() {
   send("/api/coffee");
 }
+
+/** Record a named UI action (e.g. "download", "emoji" with the glyph as label). */
+export function trackEvent(action, label) {
+  send("/api/event", { action, label });
+}

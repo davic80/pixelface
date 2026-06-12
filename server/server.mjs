@@ -84,6 +84,13 @@ function record(type, req, body) {
     lang: String(body.lang || "").slice(0, 12),
     tz: String(body.tz || "").slice(0, 40),
   };
+  if (type === "action") {
+    ev.action = String(body.action || "")
+      .toLowerCase()
+      .replace(/[^a-z_]/g, "")
+      .slice(0, 24);
+    ev.label = String(body.label || "").slice(0, 24);
+  }
   try {
     appendFileSync(EVENTS, `${JSON.stringify(ev)}\n`);
   } catch {
@@ -181,6 +188,8 @@ function bars(entries, { label = (k) => esc(k), max = 12 } = {}) {
 function renderStats(events) {
   const hits = events.filter((e) => e.type === "hit");
   const coffee = events.filter((e) => e.type === "coffee");
+  const actions = events.filter((e) => e.type === "action");
+  const ac = (a) => actions.filter((e) => e.action === a).length;
 
   const dayKey = (t) => new Date(t).toISOString().slice(0, 10);
   const days = new Map();
@@ -222,8 +231,9 @@ h1{font-size:1.4rem;margin:0 0 4px}.sub{color:var(--muted);font-size:.85rem;marg
 <p class="sub">Analíticas anónimas — sin IP, sin cookies. Las horas son UTC.</p>
 <div class="bigrow">
   ${big(hits.length, "páginas servidas")}
+  ${big(ac("download"), "descargas")}
+  ${big(ac("new_photo"), "otra foto")}
   ${big(coffee.length, "clics en ☕ café")}
-  ${big(days.size, "días con visitas")}
   ${big(tally(hits.map((e) => e.country)).length, "países")}
 </div>
 <div class="grid">
@@ -235,6 +245,8 @@ h1{font-size:1.4rem;margin:0 0 4px}.sub{color:var(--muted);font-size:.85rem;marg
   ${card("Sistema", bars(tally(hits.map((e) => e.os))))}
   ${card("Resolución", bars(tally(hits.filter((e) => e.w).map((e) => `${e.w}×${e.h}`))))}
   ${card("Idioma", bars(tally(hits.filter((e) => e.lang).map((e) => e.lang))))}
+  ${card("Acciones", bars(tally(actions.map((e) => e.action))))}
+  ${card("Emojis usados", bars(tally(actions.filter((e) => e.action === "emoji" && e.label).map((e) => e.label))))}
 </div>
 <p class="foot">pixelface — las fotos nunca salen del navegador; estas estadísticas son agregadas y anónimas.</p>
 </body></html>`;
@@ -257,6 +269,7 @@ const server = createServer((req, res) => {
   const pathname = new URL(req.url, "http://localhost").pathname;
   if (req.method === "POST" && pathname === "/api/hit") return collect("hit", req, res);
   if (req.method === "POST" && pathname === "/api/coffee") return collect("coffee", req, res);
+  if (req.method === "POST" && pathname === "/api/event") return collect("action", req, res);
   if (pathname === "/healthz") return text(res, 200, "ok");
   if (pathname === "/stats") return stats(req, res);
   if (req.method !== "GET" && req.method !== "HEAD") return text(res, 405, "method not allowed");

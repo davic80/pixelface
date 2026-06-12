@@ -3,6 +3,14 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.4.1] - 2026-06-13
+
+### Added
+- `/stats` now also tracks **UI actions**: image downloads, "new photo",
+  add/delete area, size & intensity slider use, style changes, **emoji picks
+  (per emoji)**, include/exclude, and select all/none. New counters for downloads
+  and "new photo", plus "Acciones" and "Emojis usados" cards.
+
 ## [0.4.0] - 2026-06-13
 
 ### Added
