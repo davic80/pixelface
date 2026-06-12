@@ -3,6 +3,16 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.1.1] - 2026-06-12
+
+### Improved
+- Much better detection of **small faces**: detection now runs on the full image
+  plus overlapping tiles (multi-scale), merging results with non-max suppression.
+  Detection confidence threshold lowered to 0.3 (duplicates removed by NMS).
+
+### Changed
+- Emoji set is now 😀 😎 🙈 😢 😂.
+
 ## [0.1.0] - 2026-06-12
 
 ### Added
