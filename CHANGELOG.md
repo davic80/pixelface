@@ -3,6 +3,22 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.1.2] - 2026-06-12
+
+### Improved
+- Fully responsive, mobile-first layout; minimal spacing and copy throughout
+  (shorter labels and status messages, leaner hero).
+- Picking an emoji now switches the style to "emoji" automatically; the emoji
+  picker is always visible.
+
+### Added
+- Deploy tooling: `deploy.sh` (pulls the GHCR image and runs it bound to
+  127.0.0.1), `.env.example`, and `DEPLOY.md` with Cloudflare DNS + reverse
+  proxy (Caddy / nginx) instructions.
+
+### Planned (future patch)
+- Per-face effect/emoji (different censor style per detected face).
+
 ## [0.1.1] - 2026-06-12
 
 ### Improved

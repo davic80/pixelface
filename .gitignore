@@ -5,6 +5,9 @@ dist/
 public/wasm/
 public/models/
 
+# Local deployment config
+.env
+
 # OS / editor
 .DS_Store
 *.log

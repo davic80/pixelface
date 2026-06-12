@@ -23,15 +23,10 @@
 
     <main class="app">
       <section class="hero">
-        <h1 data-i18n="hero.title">Pixela las caras de tus fotos</h1>
-        <p class="hero-sub" data-i18n="hero.subtitle">
-          Sube una foto, elige qué caras tapar y descárgala.
-        </p>
+        <h1 data-i18n="hero.title">Pixela caras</h1>
         <p class="privacy-badge">
           <span class="lock">🔒</span>
-          <span data-i18n="hero.privacy">
-            100% privado. Todo se procesa en tu dispositivo. La foto nunca se sube.
-          </span>
+          <span data-i18n="hero.privacy">100% privado · todo en tu móvil</span>
         </p>
       </section>
 
@@ -40,10 +35,8 @@
         <input id="file-input" type="file" accept="image/*" hidden />
         <div class="dropzone-inner">
           <div class="dropzone-icon">🖼️</div>
-          <p data-i18n="upload.cta"><strong>Arrastra una foto</strong> o haz clic para elegir</p>
-          <p class="dropzone-hint" data-i18n="upload.hint">
-            La imagen no sale de tu navegador.
-          </p>
+          <p data-i18n="upload.cta"><strong>Elige una foto</strong></p>
+          <p class="dropzone-hint" data-i18n="upload.hint">No sale de tu dispositivo</p>
         </div>
       </section>
 
@@ -84,7 +77,7 @@
               <input type="range" id="intensity" min="1" max="100" value="50" />
             </label>
 
-            <div class="emoji-picker" id="emoji-picker" hidden>
+            <div class="emoji-picker" id="emoji-picker">
               <button type="button" class="active">😀</button>
               <button type="button">😎</button>
               <button type="button">🙈</button>

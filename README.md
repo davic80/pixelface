@@ -54,8 +54,10 @@ docker run -p 8080:80 pixelface
 ```
 
 La CI de GitHub Actions hace lint + build y publica la imagen en GHCR en cada push a
-`main`. En el servidor, detrás del reverse proxy, se expone como
-`pixelface.ojoalprecio.com`.
+`main`. En el servidor, `./deploy.sh` hace `pull` de esa imagen y la arranca en
+`127.0.0.1:8080`, detrás del reverse proxy, como `pixelface.ojoalprecio.com`.
+
+📖 Guía completa de despliegue (Cloudflare DNS + reverse proxy): **[DEPLOY.md](./DEPLOY.md)**.
 
 ## Stack
 

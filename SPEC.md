@@ -101,7 +101,7 @@ que la imagen **nunca llega al servidor**. No es "no la guardamos", es "nunca la
 
 - Edición manual de recuadros (añadir cara no detectada / borrar falso positivo) → **v2**.
 - Detección de matrículas u otros objetos sensibles.
-- Estilo de censura distinto por cara.
+- **Estilo de censura distinto por cara** (próxima patch tras v0.1.2).
 - Modo lote (varias fotos a la vez).
 - Rotar el emoji según la orientación de la cara (usar keypoints de MediaPipe).
 

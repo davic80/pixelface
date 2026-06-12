@@ -139,14 +139,18 @@ function drawOverlay() {
 }
 
 // --- Controls -------------------------------------------------------------
+function applyStyle(style) {
+  state.style = style;
+  for (const b of $("#style-seg").children) {
+    b.classList.toggle("active", b.dataset.style === style);
+  }
+  $("#intensity-label").hidden = style === "emoji";
+  render();
+}
+
 function onStyleClick(e) {
   const btn = e.target.closest("[data-style]");
-  if (!btn) return;
-  state.style = btn.dataset.style;
-  for (const b of e.currentTarget.children) b.classList.toggle("active", b === btn);
-  $("#emoji-picker").hidden = state.style !== "emoji";
-  $("#intensity-label").hidden = state.style === "emoji";
-  render();
+  if (btn) applyStyle(btn.dataset.style);
 }
 
 function onEmojiClick(e) {
@@ -154,7 +158,8 @@ function onEmojiClick(e) {
   if (!btn) return;
   state.emoji = btn.textContent.trim();
   for (const b of e.currentTarget.children) b.classList.toggle("active", b === btn);
-  render();
+  // Picking an emoji implies you want the emoji style.
+  applyStyle("emoji");
 }
 
 function setAll(selected) {
