@@ -194,10 +194,13 @@ body {
   box-shadow: 0 0 0 2px var(--accent), 0 0 0 4px rgba(91, 140, 255, 0.25);
 }
 
-/* While adding an area, the overlay itself captures the drag. */
+/* While adding an area, the overlay itself captures the drag.
+   touch-action:none stops the browser from treating the drag as scroll/zoom,
+   which is what broke area creation on mobile. */
 .overlay.drawing {
   pointer-events: auto;
   cursor: crosshair;
+  touch-action: none;
 }
 
 .overlay.drawing .facebox {

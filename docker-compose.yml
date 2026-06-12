@@ -10,7 +10,6 @@
 services:
   pixelface:
     image: ghcr.io/davic80/pixelface:${PIXELFACE_TAG:-latest}
-    container_name: pixelface
     restart: unless-stopped
     expose:
       - "80" # internal only; reachable by Caddy on the shared network

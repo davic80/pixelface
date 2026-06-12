@@ -13,12 +13,15 @@
 services:
   pixelface:
     image: ghcr.io/davic80/pixelface:${PIXELFACE_TAG:-latest}
-    container_name: pixelface
     restart: unless-stopped
     expose:
       - "80" # internal only; reached by the shared Caddy as http://pixelface:80
     networks:
-      - proxy
+      proxy:
+        # Stable name for the Caddy "reverse_proxy pixelface:80" regardless of
+        # the generated container name (no fixed container_name -> clean redeploys).
+        aliases:
+          - pixelface
 
 networks:
   proxy:

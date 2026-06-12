@@ -235,6 +235,7 @@ function toImageCoords(e) {
 
 function onDrawStart(e) {
   if (!state.drawMode) return;
+  // Prevent the touch gesture from scrolling/zooming the page while drawing.
   e.preventDefault();
   const start = toImageCoords(e);
   const band = document.createElement("div");
@@ -242,6 +243,7 @@ function onDrawStart(e) {
   overlay.appendChild(band);
 
   const onMove = (ev) => {
+    ev.preventDefault();
     const p = toImageCoords(ev);
     const x = Math.min(start.x, p.x);
     const y = Math.min(start.y, p.y);
@@ -253,10 +255,15 @@ function onDrawStart(e) {
     band.style.height = `${(h / canvas.height) * 100}%`;
   };
 
-  const onUp = (ev) => {
-    overlay.removeEventListener("pointermove", onMove);
-    overlay.removeEventListener("pointerup", onUp);
+  const cleanup = () => {
+    window.removeEventListener("pointermove", onMove);
+    window.removeEventListener("pointerup", onUp);
+    window.removeEventListener("pointercancel", onCancel);
     band.remove();
+  };
+
+  const onUp = (ev) => {
+    cleanup();
     const p = toImageCoords(ev);
     const x = Math.round(Math.min(start.x, p.x));
     const y = Math.round(Math.min(start.y, p.y));
@@ -273,9 +280,17 @@ function onDrawStart(e) {
     render();
   };
 
-  overlay.setPointerCapture?.(e.pointerId);
-  overlay.addEventListener("pointermove", onMove);
-  overlay.addEventListener("pointerup", onUp);
+  const onCancel = () => {
+    cleanup();
+    toggleDrawMode();
+    render();
+  };
+
+  // Listen on window so the drag keeps tracking even if the pointer leaves the
+  // overlay (important on touch screens).
+  window.addEventListener("pointermove", onMove, { passive: false });
+  window.addEventListener("pointerup", onUp);
+  window.addEventListener("pointercancel", onCancel);
 }
 
 // --- Bulk + style controls ------------------------------------------------

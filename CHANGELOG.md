@@ -3,6 +3,18 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.1] - 2026-06-12
+
+### Fixed
+- Creating areas now works on **mobile/touch**: the drag was being swallowed as a
+  scroll/zoom gesture. Added `touch-action: none` and window-level pointer
+  tracking (with `pointercancel` handling).
+
+### Changed
+- More robust deploys: removed the fixed `container_name` (cause of the
+  "name already in use" conflict on redeploy) and pinned a `pixelface` network
+  alias so the shared Caddy still reaches the app.
+
 ## [0.2.0] - 2026-06-12
 
 ### Added
