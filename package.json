@@ -1,6 +1,6 @@
 {
   "name": "pixelface",
-  "version": "0.3.6",
+  "version": "0.4.0",
   "description": "Pixela y censura caras en tus fotos. 100% privado: todo se procesa en tu navegador, la imagen nunca se sube.",
   "type": "module",
   "license": "MIT",
@@ -9,6 +9,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "start": "node server/server.mjs",
     "lint": "biome check .",
     "format": "biome format --write .",
     "ci": "biome ci ."

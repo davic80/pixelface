@@ -10,7 +10,16 @@ COPY . .
 RUN npm run setup:assets && npm run build
 
 # --- Serve stage ----------------------------------------------------------
-FROM nginx:1.27-alpine AS serve
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/dist /usr/share/nginx/html
+FROM node:22-alpine AS serve
+WORKDIR /app
+ENV NODE_ENV=production
+ENV PORT=80
+ENV DATA_DIR=/data
+
+# The backend has zero dependencies, so we only need the built site + server.
+COPY --from=build /app/dist ./dist
+COPY server ./server
+
+VOLUME ["/data"]
 EXPOSE 80
+CMD ["node", "server/server.mjs"]

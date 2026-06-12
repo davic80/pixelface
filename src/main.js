@@ -1,4 +1,5 @@
 import "./style.css";
+import { trackCoffee, trackVisit } from "./analytics.js";
 import { renderCensored } from "./censor.js";
 import { detectFaces, getDetector } from "./detector.js";
 import { applyTranslations, detectLang, setLang, t } from "./i18n.js";
@@ -104,8 +105,13 @@ function boot() {
   // Adding new areas: tap on the overlay while in add mode.
   overlay.addEventListener("pointerdown", onAddTap);
 
+  // Track the coffee click (the link still opens normally).
+  document.querySelector(".coffee")?.addEventListener("click", trackCoffee);
+
   // Warm up the detector in the background so the first photo feels instant.
   getDetector().catch(() => {});
+
+  trackVisit();
 }
 
 // --- Image loading & detection -------------------------------------------

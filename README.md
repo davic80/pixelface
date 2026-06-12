@@ -24,8 +24,16 @@ terceros** con tus datos.
 ## Privacidad
 
 - La foto nunca sale del navegador. No hay backend de subida.
-- No se almacena nada. No hay tracking de imágenes.
+- No se almacena ni se trackea nada de la imagen.
 - Los metadatos EXIF (GPS, cámara) se eliminan al exportar.
+- Las analíticas de uso (`/stats`) son **anónimas y agregadas**: país (vía
+  Cloudflare), dispositivo, navegador, resolución… **nunca la IP ni cookies**, y
+  nada relacionado con la foto.
+
+## Stats
+
+Hay un panel `/stats` (protegido con Basic Auth) con páginas servidas, visitas por
+día/hora, países, dispositivos, navegadores, resoluciones y clics al café.
 
 ## Desarrollo
 

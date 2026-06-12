@@ -75,8 +75,21 @@ En el panel de Cloudflare del dominio **`ojoalprecio.com`**:
      Origin Server → Create Certificate) en tu reverse proxy. Da caché/protección
      extra, pero algo más de configuración.
 
-> Recomendación para empezar: **DNS only + Let's Encrypt** en el servidor (con Caddy
-> es automático). Si más tarde quieres CDN/caché, pasas a Proxied + Full (strict).
+> Recomendación: **Proxied (naranja)** con SSL/TLS en **Full** — así Cloudflare añade
+> el header `CF-IPCountry` que `/stats` usa para el país (y da CDN/caché). El origen
+> mantiene su cert de Let's Encrypt de Caddy. (Con DNS only funciona todo salvo el país.)
+
+### `/stats` (analíticas)
+
+El backend expone un panel `/stats` protegido con **Basic Auth**. Define las credenciales
+en `.env` antes de desplegar:
+
+```
+STATS_USER=admin
+STATS_PASSWORD=una-clave-larga
+```
+
+Los datos (anónimos, sin IP ni cookies) se guardan en el volumen `pixelface_data`.
 
 ## 3. Reverse proxy
 

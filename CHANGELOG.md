@@ -3,6 +3,24 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.4.0] - 2026-06-13
+
+### Added
+- **Privacy-friendly analytics + `/stats` dashboard** (no IP, no cookies, no IDs):
+  a small zero-dependency Node backend now serves the app and records anonymous
+  events — pages served, visits by day/hour, country (via Cloudflare), device,
+  browser, OS, screen resolution, language, and clicks on the coffee link.
+  `/stats` is protected with HTTP Basic Auth.
+
+### Changed
+- Runtime image is now **Node** (serves the static app + API + `/stats`), with a
+  persistent volume for the events log (replaces the nginx static image).
+- Footer coffee link now reads "Invítame a un café" / "Buy me a coffee".
+
+### Ops
+- Country needs Cloudflare **Proxied** (orange) so `CF-IPCountry` reaches the
+  origin. New env vars: `STATS_USER` / `STATS_PASSWORD`.
+
 ## [0.3.6] - 2026-06-12
 
 ### Changed

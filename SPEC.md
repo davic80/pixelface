@@ -3,7 +3,11 @@
 > Webapp para pixelar/censurar caras en fotos. **Procesamiento 100% en el navegador**:
 > la foto nunca se sube a ningún servidor. Privacidad total por diseño.
 
-Estado: **en producción** (v0.2.0) en https://pixelface.ojoalprecio.com · Última actualización: 2026-06-12
+Estado: **en producción** (v0.4.0) en https://pixelface.ojoalprecio.com · Última actualización: 2026-06-13
+
+> Nota: desde v0.4.0 hay un pequeño backend Node que sirve la app y un panel de
+> analíticas anónimas en `/stats` (sin IP ni cookies). La promesa de "la foto nunca
+> sale del navegador" se mantiene intacta.
 
 ---
 

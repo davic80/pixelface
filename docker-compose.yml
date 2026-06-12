@@ -13,6 +13,11 @@ services:
     restart: unless-stopped
     expose:
       - "80" # internal only; reachable by Caddy on the shared network
+    environment:
+      STATS_USER: ${STATS_USER:-admin}
+      STATS_PASSWORD: ${STATS_PASSWORD:?set STATS_PASSWORD in .env for /stats}
+    volumes:
+      - pixelface_data:/data
     networks:
       - web
 
@@ -40,3 +45,4 @@ networks:
 volumes:
   caddy_data:
   caddy_config:
+  pixelface_data:
