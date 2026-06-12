@@ -14,10 +14,11 @@ const state = {
   image: null, // HTMLImageElement at natural resolution
   boxes: [],
   activeId: null, // box currently selected for editing
-  drawMode: false, // drawing a new area by dragging
-  style: "pixelate",
-  intensity: 50,
-  emoji: "😀",
+  drawMode: false, // tap-to-place mode for a new area
+  // Default censor settings: applied to every area that hasn't overridden them.
+  // Editing the style controls with no area selected changes these (all areas);
+  // with an area selected it overrides just that area (box.style/intensity/emoji).
+  defaults: { style: "pixelate", intensity: 50, emoji: "😀" },
 };
 
 let nextId = 1;
@@ -39,6 +40,10 @@ const boxEditor = $("#box-editor");
 const boxSize = $("#box-size");
 const boxToggle = $("#box-toggle");
 const addAreaBtn = $("#add-area");
+const styleSeg = $("#style-seg");
+const intensityEl = $("#intensity");
+const emojiPicker = $("#emoji-picker");
+const styleHeading = $("#style-heading");
 
 // --- Boot -----------------------------------------------------------------
 function boot() {
@@ -46,11 +51,14 @@ function boot() {
   setLang(detectLang());
   applyTranslations();
 
+  syncStyleControls();
+
   for (const btn of document.querySelectorAll(".lang-switch button")) {
     btn.addEventListener("click", () => {
       setLang(btn.dataset.lang);
       refreshSummary();
       syncBoxEditor();
+      syncStyleControls();
     });
   }
 
@@ -85,11 +93,11 @@ function boot() {
   boxToggle.addEventListener("click", toggleActiveOn);
   $("#box-delete").addEventListener("click", deleteActive);
 
-  // Style controls
-  $("#style-seg").addEventListener("click", onStyleClick);
-  $("#emoji-picker").addEventListener("click", onEmojiClick);
-  $("#intensity").addEventListener("input", (e) => {
-    state.intensity = Number(e.target.value);
+  // Style controls (edit the active area, or the defaults when none is selected)
+  styleSeg.addEventListener("click", onStyleClick);
+  emojiPicker.addEventListener("click", onEmojiClick);
+  intensityEl.addEventListener("input", (e) => {
+    styleTarget().intensity = Number(e.target.value);
     render();
   });
   $("#download").addEventListener("click", download);
@@ -143,14 +151,23 @@ function boxById(id) {
 }
 
 // --- Rendering ------------------------------------------------------------
+// Resolve a box's effective settings (its own overrides, else the defaults).
+function effective(box) {
+  const d = state.defaults;
+  return {
+    x: box.x,
+    y: box.y,
+    w: box.w,
+    h: box.h,
+    style: box.style ?? d.style,
+    intensity: box.intensity ?? d.intensity,
+    emoji: box.emoji ?? d.emoji,
+  };
+}
+
 function render() {
   if (!state.image) return;
-  renderCensored(
-    ctx,
-    state.image,
-    state.boxes.filter((b) => b.on),
-    { style: state.style, intensity: state.intensity, emoji: state.emoji },
-  );
+  renderCensored(ctx, state.image, state.boxes.filter((b) => b.on).map(effective));
   drawOverlay();
 }
 
@@ -169,7 +186,8 @@ function drawOverlay() {
     el.style.height = `${(box.h / height) * 100}%`;
     el.addEventListener("click", (e) => {
       e.stopPropagation();
-      selectBox(box.id);
+      if (box.id === state.activeId) deselect();
+      else selectBox(box.id);
     });
     overlay.appendChild(el);
   }
@@ -183,7 +201,37 @@ function selectBox(id) {
   sizeRef = box ? { w: box.w, h: box.h } : null;
   boxSize.value = "100";
   syncBoxEditor();
+  syncStyleControls();
   drawOverlay();
+}
+
+function deselect() {
+  state.activeId = null;
+  sizeRef = null;
+  syncBoxEditor();
+  syncStyleControls();
+  drawOverlay();
+}
+
+// The object the style controls currently edit: the active box (override) or
+// the shared defaults when no area is selected.
+function styleTarget() {
+  return boxById(state.activeId) ?? state.defaults;
+}
+
+// Reflect the active box's effective style (or the defaults) in the controls.
+function syncStyleControls() {
+  const box = boxById(state.activeId);
+  const view = box ? effective(box) : state.defaults;
+  for (const b of styleSeg.children) {
+    b.classList.toggle("active", b.dataset.style === view.style);
+  }
+  intensityEl.value = String(view.intensity);
+  $("#intensity-label").hidden = view.style === "emoji";
+  for (const b of emojiPicker.children) {
+    b.classList.toggle("active", b.textContent.trim() === view.emoji);
+  }
+  styleHeading.textContent = box ? t("controls.styleArea") : t("controls.styleDefault");
 }
 
 function syncBoxEditor() {
@@ -220,6 +268,7 @@ function deleteActive() {
   state.activeId = null;
   sizeRef = null;
   syncBoxEditor();
+  syncStyleControls();
   refreshSummary();
   render();
 }
@@ -277,8 +326,8 @@ function setAll(on) {
 }
 
 function applyStyle(style) {
-  state.style = style;
-  for (const b of $("#style-seg").children) {
+  styleTarget().style = style;
+  for (const b of styleSeg.children) {
     b.classList.toggle("active", b.dataset.style === style);
   }
   $("#intensity-label").hidden = style === "emoji";
@@ -293,7 +342,7 @@ function onStyleClick(e) {
 function onEmojiClick(e) {
   const btn = e.target.closest("button");
   if (!btn) return;
-  state.emoji = btn.textContent.trim();
+  styleTarget().emoji = btn.textContent.trim();
   for (const b of e.currentTarget.children) b.classList.toggle("active", b === btn);
   // Picking an emoji implies you want the emoji style.
   applyStyle("emoji");

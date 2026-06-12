@@ -100,7 +100,7 @@ que la imagen **nunca llega al servidor**. No es "no la guardamos", es "nunca la
 ## 9. Backlog
 
 - ✅ ~~Edición manual de recuadros (añadir área / borrar / redimensionar)~~ → hecho en **v0.2.0**.
-- **Estilo de censura distinto por cara** (siguiente).
+- ✅ ~~Estilo de censura distinto por cara~~ → hecho en **v0.3.0**.
 - Mover/arrastrar un área ya creada (ahora se redimensiona desde el centro, pero no se reposiciona).
 - Detección de matrículas u otros objetos sensibles.
 - Modo lote (varias fotos a la vez).

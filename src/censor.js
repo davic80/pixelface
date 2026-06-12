@@ -2,17 +2,15 @@
 // re-exporting the canvas with toBlob() also strips any EXIF metadata.
 
 /**
- * Render the source image and apply the chosen effect to the selected boxes.
+ * Render the source image and apply each box's own effect.
  *
  * @param {CanvasRenderingContext2D} ctx  destination 2D context
  * @param {CanvasImageSource} image        original image (already drawn at 1:1)
- * @param {Array<{x,y,w,h}>} boxes         face boxes, image pixel coords
- * @param {object} opts
- * @param {"pixelate"|"blur"|"emoji"} opts.style
- * @param {number} opts.intensity          1..100
- * @param {string} opts.emoji              glyph used when style === "emoji"
+ * @param {Array<{x,y,w,h,style,intensity,emoji}>} boxes  resolved boxes: each
+ *        carries its effective style ("pixelate"|"blur"|"emoji"), intensity
+ *        (1..100) and emoji glyph.
  */
-export function renderCensored(ctx, image, boxes, opts) {
+export function renderCensored(ctx, image, boxes) {
   const { width, height } = ctx.canvas;
   ctx.clearRect(0, 0, width, height);
   ctx.drawImage(image, 0, 0, width, height);
@@ -20,9 +18,9 @@ export function renderCensored(ctx, image, boxes, opts) {
   for (const box of boxes) {
     const b = padBox(box, width, height);
     if (b.w <= 0 || b.h <= 0) continue;
-    if (opts.style === "pixelate") pixelate(ctx, b, opts.intensity);
-    else if (opts.style === "blur") blur(ctx, b, opts.intensity);
-    else if (opts.style === "emoji") emoji(ctx, b, opts.emoji);
+    if (box.style === "pixelate") pixelate(ctx, b, box.intensity);
+    else if (box.style === "blur") blur(ctx, b, box.intensity);
+    else if (box.style === "emoji") emoji(ctx, b, box.emoji);
   }
 }
 
@@ -55,7 +53,7 @@ function blur(ctx, b, intensity) {
   // Approximate blur by downscaling the region and upscaling it with smoothing
   // ON. This avoids CanvasRenderingContext2D.filter, which iOS Safari does not
   // handle reliably (blur did nothing on iPhone).
-  const dim = Math.max(2, Math.round(b.w * (0.04 + (1 - intensity / 100) * 0.22)));
+  const dim = Math.max(2, Math.round(b.w * (0.02 + (1 - intensity / 100) * 0.1)));
   const tmp = document.createElement("canvas");
   const tctx = tmp.getContext("2d");
   tmp.width = dim;

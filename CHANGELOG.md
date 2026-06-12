@@ -3,6 +3,17 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.3.0] - 2026-06-12
+
+### Added
+- **Per-area censor style**: each area can have its own style (pixelate / blur /
+  emoji), intensity and emoji. Select an area and the style controls edit just
+  that area; with no area selected they set the default applied to every area.
+  Tap an already-selected area to deselect it.
+
+### Changed
+- Stronger blur so it reads clearly on desktop too.
+
 ## [0.2.4] - 2026-06-12
 
 ### Fixed
