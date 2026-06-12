@@ -18,9 +18,8 @@ export function renderCensored(ctx, image, boxes) {
   for (const box of boxes) {
     const b = padBox(box, width, height);
     if (b.w <= 0 || b.h <= 0) continue;
-    if (box.style === "pixelate") pixelate(ctx, b, box.intensity);
-    else if (box.style === "blur") blur(ctx, b, box.intensity);
-    else if (box.style === "emoji") emoji(ctx, b, box.emoji);
+    if (box.style === "emoji") emoji(ctx, b, box.emoji);
+    else pixelate(ctx, b, box.intensity);
   }
 }
 
@@ -47,21 +46,6 @@ function pixelate(ctx, b, intensity) {
   ctx.imageSmoothingEnabled = false;
   ctx.drawImage(tmp, 0, 0, tmp.width, tmp.height, b.x, b.y, b.w, b.h);
   ctx.imageSmoothingEnabled = true;
-}
-
-function blur(ctx, b, intensity) {
-  // Approximate blur by downscaling the region and upscaling it with smoothing
-  // ON. This avoids CanvasRenderingContext2D.filter, which iOS Safari does not
-  // handle reliably (blur did nothing on iPhone).
-  const dim = Math.max(2, Math.round(b.w * (0.02 + (1 - intensity / 100) * 0.1)));
-  const tmp = document.createElement("canvas");
-  const tctx = tmp.getContext("2d");
-  tmp.width = dim;
-  tmp.height = Math.max(2, Math.round((dim * b.h) / b.w));
-  tctx.imageSmoothingEnabled = true;
-  tctx.drawImage(ctx.canvas, b.x, b.y, b.w, b.h, 0, 0, tmp.width, tmp.height);
-  ctx.imageSmoothingEnabled = true;
-  ctx.drawImage(tmp, 0, 0, tmp.width, tmp.height, b.x, b.y, b.w, b.h);
 }
 
 function emoji(ctx, b, glyph) {

@@ -7,6 +7,7 @@
   --accent: #5b8cff;
   --accent-2: #7c5bff;
   --on: #34d399;
+  --danger: #ef4444;
   --border: #2a3040;
   --radius: 14px;
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
@@ -210,6 +211,17 @@ body {
 #add-area.active {
   border-color: var(--accent);
   color: var(--accent);
+}
+
+/* Delete area: red outline to signal a destructive action. */
+#box-delete {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+#box-delete:hover {
+  border-color: var(--danger);
+  background: rgba(239, 68, 68, 0.12);
 }
 
 .status {

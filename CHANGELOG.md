@@ -3,6 +3,12 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.3.1] - 2026-06-12
+
+### Changed
+- Removed the **blur** style — censor styles are now **pixelate** and **emoji**.
+- Added a new emoji (🥸); the delete-area button now has a **red outline**.
+
 ## [0.3.0] - 2026-06-12
 
 ### Added
