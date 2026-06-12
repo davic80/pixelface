@@ -3,6 +3,12 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.4.2] - 2026-06-13
+
+### Added
+- Track **photos loaded** (`load_photo`) so /stats shows the funnel
+  pages → photos loaded → downloads. New "fotos cargadas" counter.
+
 ## [0.4.1] - 2026-06-13
 
 ### Added

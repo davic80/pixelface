@@ -130,6 +130,7 @@ async function loadFile(file) {
     dropzone.hidden = true;
     editor.hidden = false;
     syncBoxEditor();
+    trackEvent("load_photo");
 
     setStatus(t("status.detecting"));
     render();

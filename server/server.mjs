@@ -231,6 +231,7 @@ h1{font-size:1.4rem;margin:0 0 4px}.sub{color:var(--muted);font-size:.85rem;marg
 <p class="sub">Analíticas anónimas — sin IP, sin cookies. Las horas son UTC.</p>
 <div class="bigrow">
   ${big(hits.length, "páginas servidas")}
+  ${big(ac("load_photo"), "fotos cargadas")}
   ${big(ac("download"), "descargas")}
   ${big(ac("new_photo"), "otra foto")}
   ${big(coffee.length, "clics en ☕ café")}
