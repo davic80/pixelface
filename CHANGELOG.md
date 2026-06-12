@@ -3,6 +3,11 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.3.5] - 2026-06-12
+
+### Changed
+- Emoji set is now **15**: removed ⬛, added 🙉 and 🥷 🫥 👻.
+
 ## [0.3.4] - 2026-06-12
 
 ### Fixed

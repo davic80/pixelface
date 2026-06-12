@@ -333,7 +333,7 @@ body {
 }
 
 .emoji-picker button {
-  flex: 1 0 calc(16.66% - 6px);
+  flex: 0 1 calc(16.66% - 6px);
   font-size: 1.3rem;
   background: var(--surface-2);
   border: 1px solid transparent;
