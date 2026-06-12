@@ -3,6 +3,11 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.3.3] - 2026-06-12
+
+### Changed
+- Simpler hint under "Caras": just "Toca o arrastra un área".
+
 ## [0.3.2] - 2026-06-12
 
 ### Added
