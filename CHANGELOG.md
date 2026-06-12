@@ -3,6 +3,20 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.3.4] - 2026-06-12
+
+### Fixed
+- The intensity slider is now correctly hidden for the **emoji** style (the
+  `hidden` attribute was being overridden by a `display` rule).
+
+### Changed
+- **12 emojis** now (two rows): added 🤡 🙊 🤐 👽 🤖 ⬛.
+- Title and "100% privado" moved **into the header**, between *pixelface* and the
+  ES/EN switch.
+- Control cards (Caras / Área / Estilo) stretch to the photo height on desktop;
+  the style heading is just "Estilo" again (dropped the "(esta área)" suffix).
+- **New photo** button is now softly colored.
+
 ## [0.3.3] - 2026-06-12
 
 ### Changed

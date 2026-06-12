@@ -42,7 +42,6 @@ const addAreaBtn = $("#add-area");
 const styleSeg = $("#style-seg");
 const intensityEl = $("#intensity");
 const emojiPicker = $("#emoji-picker");
-const styleHeading = $("#style-heading");
 
 // --- Boot -----------------------------------------------------------------
 function boot() {
@@ -267,7 +266,6 @@ function syncStyleControls() {
   for (const b of emojiPicker.children) {
     b.classList.toggle("active", b.textContent.trim() === view.emoji);
   }
-  styleHeading.textContent = box ? t("controls.styleArea") : t("controls.styleDefault");
 }
 
 function syncBoxEditor() {

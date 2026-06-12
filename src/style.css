@@ -18,6 +18,12 @@
   box-sizing: border-box;
 }
 
+/* The hidden attribute must win over component display rules (e.g. flex/grid),
+   otherwise [hidden] elements like the intensity slider stay visible. */
+[hidden] {
+  display: none !important;
+}
+
 html,
 body {
   margin: 0;
@@ -36,8 +42,8 @@ body {
 .topbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 16px 20px;
+  gap: 12px 16px;
+  padding: 12px 20px;
   max-width: 1000px;
   width: 100%;
   margin: 0 auto;
@@ -51,6 +57,27 @@ body {
   font-size: 1.1rem;
   color: var(--text);
   text-decoration: none;
+  white-space: nowrap;
+}
+
+/* Title + privacy badge, centered between the brand and the language switch. */
+.tagline {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tagline-title {
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+}
+
+.lang-switch {
+  white-space: nowrap;
 }
 
 .brand-dot {
@@ -85,27 +112,17 @@ body {
   padding: 8px 16px 28px;
 }
 
-.hero {
-  text-align: center;
-  margin: 12px 0 18px;
-}
-
-.hero h1 {
-  font-size: clamp(1.4rem, 6vw, 2rem);
-  margin: 0 0 8px;
-  letter-spacing: -0.02em;
-}
-
 .privacy-badge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background: var(--surface);
   border: 1px solid var(--border);
-  color: var(--text);
-  padding: 8px 14px;
+  color: var(--muted);
+  padding: 5px 10px;
   border-radius: 999px;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
+  white-space: nowrap;
 }
 
 .privacy-badge .lock {
@@ -145,7 +162,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 280px;
   gap: 16px;
-  align-items: start;
+  align-items: stretch;
 }
 
 .canvas-wrap {
@@ -239,10 +256,13 @@ body {
 }
 
 /* Controls ------------------------------------------------------------ */
+/* space-between makes the cards span the column, which is stretched to the
+   photo height on desktop (see .editor align-items: stretch). */
 .controls {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  justify-content: space-between;
+  gap: 14px;
 }
 
 .control-group {
@@ -307,11 +327,13 @@ body {
 
 .emoji-picker {
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
   margin-top: 14px;
 }
 
 .emoji-picker button {
+  flex: 1 0 calc(16.66% - 6px);
   font-size: 1.3rem;
   background: var(--surface-2);
   border: 1px solid transparent;
@@ -355,6 +377,18 @@ body {
 }
 
 .btn-ghost:hover {
+  border-color: var(--accent);
+}
+
+/* "New photo": softly colored so it stands out a little without competing
+   with the primary Download button. */
+#reset {
+  background: rgba(91, 140, 255, 0.1);
+  border-color: rgba(91, 140, 255, 0.35);
+}
+
+#reset:hover {
+  background: rgba(91, 140, 255, 0.16);
   border-color: var(--accent);
 }
 
@@ -405,6 +439,23 @@ body {
 @media (max-width: 760px) {
   .topbar {
     padding: 12px 16px;
+    flex-wrap: wrap;
+  }
+
+  /* Brand + language on the first row, tagline drops to its own line below. */
+  .lang-switch {
+    margin-left: auto;
+  }
+
+  .tagline {
+    order: 3;
+    flex-basis: 100%;
+    justify-content: center;
+  }
+
+  /* On a phone the controls follow the photo; no need to stretch them. */
+  .controls {
+    justify-content: flex-start;
   }
 
   .editor {
