@@ -317,10 +317,16 @@ body {
   border-color: var(--accent);
 }
 
-.actions {
+/* Full-width action bar spanning both editor columns (photo + options). */
+.editor-actions {
+  grid-column: 1 / -1;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+}
+
+.editor-actions .btn-primary,
+.editor-actions .btn-ghost {
+  flex: 1;
 }
 
 .btn-primary {

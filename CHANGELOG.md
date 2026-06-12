@@ -3,6 +3,12 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.2] - 2026-06-12
+
+### Changed
+- The **Download** and **New photo** buttons now span the full editor width
+  (below the photo and the options), instead of sitting narrow in the sidebar.
+
 ## [0.2.1] - 2026-06-12
 
 ### Fixed
