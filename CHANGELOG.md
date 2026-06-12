@@ -3,6 +3,12 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.3.2] - 2026-06-12
+
+### Added
+- **Move areas**: drag an area to reposition it (click-and-drag with the mouse,
+  or tap-and-move on touch). A plain tap still selects/deselects.
+
 ## [0.3.1] - 2026-06-12
 
 ### Changed

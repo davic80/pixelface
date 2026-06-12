@@ -1,6 +1,6 @@
 {
   "name": "pixelface",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Pixela y censura caras en tus fotos. 100% privado: todo se procesa en tu navegador, la imagen nunca se sube.",
   "type": "module",
   "license": "MIT",

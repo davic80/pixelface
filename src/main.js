@@ -6,10 +6,9 @@ import { APP_VERSION } from "./version.js";
 
 // --- App state ------------------------------------------------------------
 // A box is an editable area:
-//   { id, x, y, w, h, on, baseW, baseH, scale }
-// - on:    whether the censor effect is applied to it
-// - base*: the box size at scale 1 (detected size, or drawn size)
-// - scale: size multiplier driven by the per-area slider
+//   { id, x, y, w, h, on, style?, intensity?, emoji? }
+// - on: whether the censor effect is applied to it
+// - style/intensity/emoji: per-area overrides; when absent, state.defaults apply
 const state = {
   image: null, // HTMLImageElement at natural resolution
   boxes: [],
@@ -184,16 +183,53 @@ function drawOverlay() {
     el.style.top = `${(box.y / height) * 100}%`;
     el.style.width = `${(box.w / width) * 100}%`;
     el.style.height = `${(box.h / height) * 100}%`;
-    el.addEventListener("click", (e) => {
-      e.stopPropagation();
-      if (box.id === state.activeId) deselect();
-      else selectBox(box.id);
-    });
+    el.addEventListener("pointerdown", (e) => startBoxDrag(e, box));
     overlay.appendChild(el);
   }
 }
 
 // --- Selection & per-area editing ----------------------------------------
+// Pointer down on an area: a small movement is a tap (select/deselect), a larger
+// one is a drag that moves the area. Works with mouse and touch.
+function startBoxDrag(e, box) {
+  e.stopPropagation();
+  e.preventDefault();
+  const wasActive = state.activeId === box.id;
+  if (!wasActive) selectBox(box.id);
+
+  // Convert screen pixels to image pixels (aspect ratio is preserved).
+  const scale = canvas.width / overlay.getBoundingClientRect().width;
+  const startX = e.clientX;
+  const startY = e.clientY;
+  const origX = box.x;
+  const origY = box.y;
+  let moved = false;
+
+  const onMove = (ev) => {
+    ev.preventDefault();
+    if (!moved && Math.hypot(ev.clientX - startX, ev.clientY - startY) > 4) moved = true;
+    if (!moved) return;
+    box.x = Math.max(
+      0,
+      Math.min(canvas.width - box.w, Math.round(origX + (ev.clientX - startX) * scale)),
+    );
+    box.y = Math.max(
+      0,
+      Math.min(canvas.height - box.h, Math.round(origY + (ev.clientY - startY) * scale)),
+    );
+    render();
+  };
+
+  const onUp = () => {
+    window.removeEventListener("pointermove", onMove);
+    window.removeEventListener("pointerup", onUp);
+    if (!moved && wasActive) deselect(); // a plain tap on the active area deselects it
+  };
+
+  window.addEventListener("pointermove", onMove, { passive: false });
+  window.addEventListener("pointerup", onUp);
+}
+
 function selectBox(id) {
   state.activeId = id;
   const box = boxById(id);
