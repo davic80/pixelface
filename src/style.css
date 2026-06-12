@@ -333,7 +333,8 @@ body {
 }
 
 .emoji-picker button {
-  flex: 0 1 calc(16.66% - 6px);
+  /* 5 per row, growing to fill the block width (15 emojis = 3 full rows). */
+  flex: 1 1 calc(20% - 6px);
   font-size: 1.3rem;
   background: var(--surface-2);
   border: 1px solid transparent;

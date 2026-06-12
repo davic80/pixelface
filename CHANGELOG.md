@@ -3,6 +3,12 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.3.6] - 2026-06-12
+
+### Changed
+- Replaced 🫥 with 💣; emoji picker is now 5 per row filling the full block width
+  (3 even rows).
+
 ## [0.3.5] - 2026-06-12
 
 ### Changed
