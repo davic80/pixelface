@@ -14,8 +14,8 @@ const WASM_SRC = resolve(root, "node_modules/@mediapipe/tasks-vision/wasm");
 const WASM_DEST = resolve(root, "public/wasm");
 
 const MODEL_URL =
-  "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite";
-const MODEL_DEST = resolve(root, "public/models/blaze_face_short_range.tflite");
+  "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_full_range/float16/1/blaze_face_full_range.tflite";
+const MODEL_DEST = resolve(root, "public/models/blaze_face_full_range.tflite");
 
 async function exists(p) {
   try {

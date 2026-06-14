@@ -17,12 +17,12 @@ function createDetector() {
     const vision = await FilesetResolver.forVisionTasks("/wasm");
     return FaceDetector.createFromOptions(vision, {
       baseOptions: {
-        modelAssetPath: "/models/blaze_face_short_range.tflite",
+        modelAssetPath: "/models/blaze_face_full_range.tflite",
       },
       runningMode: "IMAGE",
-      // Conservative: prefer missing a small face (the user can add an area by
-      // hand) over false positives. Tiling still recovers many small faces.
-      minDetectionConfidence: 0.5,
+      // Full-range model handles distant/angled faces better than short-range.
+      // 0.45 still avoids false positives while recovering more real faces.
+      minDetectionConfidence: 0.45,
     });
   })();
 }
@@ -74,13 +74,19 @@ function tileStarts(total, tile, overlap) {
   return [...new Set(starts)];
 }
 
+// Target tile side length: at this size a face occupies enough of the tile
+// for the model to detect it reliably. Cap at 4 tiles per dimension.
+const TARGET_TILE = 700;
+const MAX_TILE_DIVS = 4;
+
 function planTiles(W, H) {
   const longest = Math.max(W, H);
-  if (longest < 700) return []; // small image: the full pass is enough
-  const divs = longest >= 2000 ? 3 : 2;
-  const tw = Math.ceil(W / divs);
-  const th = Math.ceil(H / divs);
-  const overlap = 0.2;
+  if (longest < 500) return []; // small image: the full pass is enough
+  const cols = Math.min(MAX_TILE_DIVS, Math.ceil(W / TARGET_TILE));
+  const rows = Math.min(MAX_TILE_DIVS, Math.ceil(H / TARGET_TILE));
+  const tw = Math.ceil(W / cols);
+  const th = Math.ceil(H / rows);
+  const overlap = 0.25; // wider overlap to avoid missing faces on seams
   const tiles = [];
   for (const y of tileStarts(H, th, overlap)) {
     for (const x of tileStarts(W, tw, overlap)) {
@@ -146,5 +152,5 @@ export async function detectFaces(source) {
     }
   }
 
-  return nms(all, 0.3);
+  return nms(all, 0.4);
 }

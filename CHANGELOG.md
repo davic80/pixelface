@@ -3,6 +3,21 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.5.0] - 2026-06-14
+
+### Changed
+- **Better face detection model**: upgraded from BlazeFace short-range to
+  BlazeFace full-range (`blaze_face_full_range.tflite`), which handles faces
+  at larger distances and more varied angles — significantly improving group
+  photo and crowd detection.
+- **Aspect-ratio-aware tiling**: tile grid now adapts to image shape (target
+  ~700px per tile, up to 4 tiles per dimension) instead of a fixed 2×2 or
+  3×3 square grid. A 3000×600 panorama now gets 4×1 tiles instead of 3×3
+  with unusable 1000×200 tiles. Tiling also kicks in at 500px (was 700px).
+- **Tuned detection parameters**: tile overlap increased 20% → 25%; NMS IoU
+  threshold raised 0.3 → 0.4 (less aggressive suppression of adjacent faces);
+  confidence threshold lowered 0.5 → 0.45.
+
 ## [0.4.2] - 2026-06-13
 
 ### Added
